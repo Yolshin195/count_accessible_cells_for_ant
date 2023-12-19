@@ -1,17 +1,22 @@
 import pygame
 import sys
+from enum import Enum
 
 pygame.init()
+
 SCREEN_WIDTH, SCREEN_HEIGHT = 900, 900
 CELL_SIZE = 80
 center_x, center_y = 0, 0
 
+
 # Цвета
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
-RED = "red"
-GREEN = "green"
-BLUE = "blue"
+class Colors(Enum):
+    WHITE = (255, 255, 255)
+    BLACK = (0, 0, 0)
+    RED = (255, 0, 0)
+    GREEN = (0, 255, 0)
+    BLUE = (0, 0, 255)
+
 
 # Создание экрана
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -30,41 +35,27 @@ def is_accessible(x, y):
 
 def get_color(x, y):
     if y == center_y and x == center_x:
-        return RED
+        return Colors.RED.value
 
-    if is_accessible((1000 + (y - center_y)), (1000 + (x - center_x))):
-        return GREEN
+    if is_accessible(1000 + (y - center_y), 1000 + (x - center_x)):
+        return Colors.GREEN.value
 
-    return BLUE
+    return Colors.BLUE.value
 
 
 def draw_grid():
     for i in range(11):
         for j in range(11):
-            pygame.draw.rect(
-                screen,
-                get_color(j, i),
-                (j * CELL_SIZE, i * CELL_SIZE, CELL_SIZE, CELL_SIZE),
-                1,
-            )
-            font = pygame.font.Font(None, 24)
+            rect = pygame.Rect(j * CELL_SIZE, i * CELL_SIZE, CELL_SIZE, CELL_SIZE)
+            pygame.draw.rect(screen, get_color(j, i), rect, 1)
+
+            font = pygame.font.Font(None, 18)
             text = font.render(
-                f"{1000 + (j - center_x)},{1000 + (i - center_y)}", True, WHITE
+                f"{1000 + (j - center_x)},{1000 + (i - center_y)}",
+                True,
+                Colors.WHITE.value,
             )
-            screen.blit(text, (j * CELL_SIZE + 5, i * CELL_SIZE + 5))
-
-
-def draw_player():
-    pygame.draw.rect(
-        screen,
-        WHITE,
-        (
-            SCREEN_WIDTH // 2 - CELL_SIZE // 2,
-            SCREEN_HEIGHT // 2 - CELL_SIZE // 2,
-            CELL_SIZE,
-            CELL_SIZE,
-        ),
-    )
+            screen.blit(text, (rect.x + 5, rect.y + 5))
 
 
 def main():
@@ -75,18 +66,18 @@ def main():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_UP and center_y > -1000:
-                    center_y -= 1
-                elif event.key == pygame.K_DOWN and center_y < 1000:
-                    center_y += 1
-                elif event.key == pygame.K_LEFT and center_x > -1000:
-                    center_x -= 1
-                elif event.key == pygame.K_RIGHT and center_x < 1000:
-                    center_x += 1
-                print(center_x, center_y)
 
-        screen.fill(BLACK)
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_UP] and center_y > -1000:
+            center_y -= 1
+        elif keys[pygame.K_DOWN] and center_y < 1000:
+            center_y += 1
+        elif keys[pygame.K_LEFT] and center_x > -1000:
+            center_x -= 1
+        elif keys[pygame.K_RIGHT] and center_x < 1000:
+            center_x += 1
+
+        screen.fill(Colors.BLACK.value)
         draw_grid()
 
         pygame.display.flip()
