@@ -10,7 +10,11 @@
 
 ## Решение
 Для решения используется алгоритм обхода графа в ширину (BFS)
-
+```python
+def test_count_accessible_cells_for_ant_starting_at_1000_1000(self):
+        result = count_accessible_cells_for_ant(Point(1000, 1000))
+        self.assertEqual(result, 148848)
+```
 ## Простой тест
 Начальная точка (1010, 980) -> ответ 28, смотреть тест:
 ```python
