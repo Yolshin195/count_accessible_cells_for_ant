@@ -12,7 +12,7 @@
 Для решения используется алгоритм обхода графа в ширину (BFS)
 
 ## Простой тест
-Начальная точка (1010, 980) -> ответ 28 смотреть тест
+Начальная точка (1010, 980) -> ответ 28, смотреть тест:
 ```python
     def test_ant_accessible_cells_count_at_coordinates_1010_980(self):
         result = count_accessible_cells_for_ant(Point(1010, 980))
